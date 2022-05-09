@@ -16,33 +16,35 @@ const reName = (target, source) => {
     resolve('ok')
   })
 }
-const gitHandle = async (uploadUrl, filePath) => {
+const gitHandle = async (uploadUrl, filePath, targetSrc) => {
   const git = simplegit(uploadUrl);
   await git.pull('origin', 'master');
   await git.add('./*');
   await git.commit('image update commit!');
-  // await git.push('origin', 'master');
-  vscode.env.clipboard.writeText(`<cdn-image extClass="weapp-image" src="images/${path.basename(filePath)}" />`);
+  await git.push('origin', 'master');
+  vscode.env.clipboard.writeText(`<cdn-image extClass="weapp-image" src="${targetSrc}/${path.basename(filePath)}" />`);
+  vscode.window.showInformationMessage('请粘贴代码');
 }
 
-const uploadImage = async (uploadUrl, filePath) => {
+const uploadImage = async (uploadUrl, filePath, targetSrc) => {
   try {
     let isRe = await reName(uploadUrl, filePath)
     if (!isRe) return
     vscode.window.withProgress({
       title: '正在上传...',
       location: vscode.ProgressLocation.Notification
-    }, async () => {
-      return new Promise((resolve) => gitHandle(uploadUrl, filePath).then(resolve()))
-    });
+    }, () => new Promise((resolve) => gitHandle(uploadUrl, filePath, targetSrc).then(resolve())));
   } catch (error) {
     console.log(error)
   }
 }
-
+//D:\\work_code\\weapp-image\\dist\\weapp-workbench\\images
 async function activate(context) {
   const uploadHereConfig = vscode.workspace.getConfiguration('upload here');
-  const uploadUrl = uploadHereConfig.uploadUrl;
+  const {
+    uploadUrl,
+    targetSrc
+  } = uploadHereConfig
   if (!uploadUrl) {
     vscode.window.showInformationMessage('请先配置图片上传接口地址');
     return;
@@ -56,7 +58,7 @@ async function activate(context) {
       }
     })
     if (fileUri && fileUri[0]) {
-      await uploadImage(uploadUrl, fileUri[0].fsPath);
+      await uploadImage(uploadUrl, fileUri[0].fsPath, targetSrc);
     }
   });
   context.subscriptions.push(disposable);

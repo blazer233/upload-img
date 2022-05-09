@@ -7,7 +7,7 @@
   "engines": {
     "vscode": "^1.45.0"
   },
-  "publisher": "sweetzone",
+  "publisher": "daryslong",
   "categories": [
     "Other"
   ],
@@ -20,7 +20,7 @@
   "activationEvents": [
     "onCommand:upload-here.UploadHere"
   ],
-  "repository": "https://github.com/zjzhome/upload-here",
+  "repository": "https://github.com/blazer233/upload-img",
   "main": "./extension.js",
   "contributes": {
     "commands": [
@@ -44,8 +44,12 @@
       "properties": {
         "upload here.uploadUrl": {
           "type": "string",
-          "default": "D:\\work_code\\weapp-image\\dist\\weapp-workbench\\images",
+          "default": "",
           "description": "指定上传图片git本地地址"
+        },
+        "upload here.targetSrc": {
+          "type": "string",
+          "default": "images"
         }
       }
     },
@@ -57,11 +61,6 @@
         "when": "editorTextFocus"
       }
     ]
-  },
-  "scripts": {
-    "lint": "eslint .",
-    "pretest": "npm run lint",
-    "test": "node ./test/runTest.js"
   },
   "devDependencies": {
     "@types/glob": "^7.1.1",
