@@ -1,0 +1,80 @@
+{
+  "name": "upload-here",
+  "displayName": "upload here",
+  "icon": "assets/icon.png",
+  "description": "right click here, short cut here, upload here",
+  "version": "2.1.1",
+  "engines": {
+    "vscode": "^1.45.0"
+  },
+  "publisher": "sweetzone",
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "upload",
+    "image",
+    "insert",
+    "flash"
+  ],
+  "activationEvents": [
+    "onCommand:upload-here.UploadHere"
+  ],
+  "repository": "https://github.com/zjzhome/upload-here",
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "upload-here.UploadHere",
+        "title": "upload here"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "upload-here.UploadHere",
+          "alt": "upload-here.UploadHere",
+          "group": "1_modification"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "upload here configuration",
+      "properties": {
+        "upload here.uploadUrl": {
+          "type": "string",
+          "default": "D:\\work_code\\weapp-image\\dist\\weapp-workbench\\images",
+          "description": "指定上传图片git本地地址"
+        }
+      }
+    },
+    "keybindings": [
+      {
+        "command": "upload-here.UploadHere",
+        "key": "shift+alt+p",
+        "mac": "shift+alt+p",
+        "when": "editorTextFocus"
+      }
+    ]
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "node ./test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.1",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^13.11.0",
+    "@types/vscode": "^1.45.0",
+    "eslint": "^6.8.0",
+    "glob": "^7.1.6",
+    "mocha": "^7.1.2",
+    "typescript": "^3.8.3",
+    "vscode-test": "^1.3.0"
+  },
+  "dependencies": {
+    "simple-git": "^3.7.1"
+  }
+}
