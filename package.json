@@ -1,13 +1,13 @@
 {
   "name": "kf-upload-img",
-  "displayName": "upload img",
+  "displayName": "kf upload img",
   "icon": "assets/icon.png",
   "description": "right click here, short cut here, upload img",
   "version": "2.1.1",
   "engines": {
     "vscode": "^1.45.0"
   },
-  "publisher": "daryslong",
+  "publisher": "darylsong",
   "categories": [
     "Other"
   ],
@@ -43,12 +43,12 @@
       "properties": {
         "upload img.uploadUrl": {
           "type": "string",
-          "default": "D:\\work_code\\weapp-image\\dist\\weapp-workbench\\images",
+          "default": "",
           "description": "指定上传图片git本地地址"
         },
         "upload img.targetSrc": {
           "type": "string",
-          "default": "images",
+          "default": "",
           "description": "指定上传图片文件夹目录"
         }
       }
