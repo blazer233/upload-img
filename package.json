@@ -1,8 +1,8 @@
 {
-  "name": "upload-here",
-  "displayName": "upload here",
+  "name": "kf-upload-img",
+  "displayName": "upload img",
   "icon": "assets/icon.png",
-  "description": "right click here, short cut here, upload here",
+  "description": "right click here, short cut here, upload img",
   "version": "2.1.1",
   "engines": {
     "vscode": "^1.45.0"
@@ -18,44 +18,44 @@
     "flash"
   ],
   "activationEvents": [
-    "onCommand:upload-here.UploadHere"
+    "onCommand:kf-upload-img.UploadHere"
   ],
   "repository": "https://github.com/blazer233/upload-img",
   "main": "./extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "upload-here.UploadHere",
-        "title": "upload here"
+        "command": "kf-upload-img.UploadHere",
+        "title": "upload img"
       }
     ],
     "menus": {
       "editor/context": [
         {
-          "command": "upload-here.UploadHere",
-          "alt": "upload-here.UploadHere",
-          "group": "1_modification"
+          "command": "kf-upload-img.UploadHere",
+          "alt": "kf-upload-img.UploadHere",
+          "group": "navigation"
         }
       ]
     },
     "configuration": {
-      "type": "object",
-      "title": "upload here configuration",
+      "title": "upload img configuration",
       "properties": {
-        "upload here.uploadUrl": {
+        "upload img.uploadUrl": {
           "type": "string",
-          "default": "",
+          "default": "D:\\work_code\\weapp-image\\dist\\weapp-workbench\\images",
           "description": "指定上传图片git本地地址"
         },
-        "upload here.targetSrc": {
+        "upload img.targetSrc": {
           "type": "string",
-          "default": "images"
+          "default": "images",
+          "description": "指定上传图片文件夹目录"
         }
       }
     },
     "keybindings": [
       {
-        "command": "upload-here.UploadHere",
+        "command": "kf-upload-img.UploadHere",
         "key": "shift+alt+p",
         "mac": "shift+alt+p",
         "when": "editorTextFocus"

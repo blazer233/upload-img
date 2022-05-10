@@ -5,42 +5,75 @@ const vscode = require('vscode');
 const fs = require('fs')
 const path = require('path')
 const simplegit = require('simple-git');
+const exists = async filePath => await fs.promises.access(filePath).then(() => true).catch(() => false)
 
-const reName = (target, source) => {
-  return new Promise((resolve) => {
-    const targetPath = path.join(target, path.basename(source))
-    console.log(targetPath, target, source)
-    var readStream = fs.createReadStream(source)
-    var writeStream = fs.createWriteStream(targetPath);
-    readStream.pipe(writeStream);
-    resolve('ok')
-  })
+
+const reName = async (target, sources) => {
+  try {
+    return await Promise.all(sources.map(async i => {
+      const targetPath = path.join(target, path.basename(i))
+      let res = await exists(targetPath)
+      if (!res) {
+        let readStream = fs.createReadStream(i)
+        let writeStream = fs.createWriteStream(targetPath);
+        readStream.pipe(writeStream);
+      } else {
+        vscode.window.showErrorMessage('检查文件名是否重复！');
+        return Promise.reject('检查文件名是否重复！')
+      }
+    }))
+  } catch (error) {
+    vscode.window.showErrorMessage(error);
+  }
 }
-const gitHandle = async (uploadUrl, filePath, targetSrc) => {
+const gitHandle = async (uploadUrl, filePaths, targetSrc, progress) => {
+  let str = ''
+  for (let i = 0; i < filePaths.length; i++) {
+    str += `<cdn-image extClass="weapp-image" src="${targetSrc}/${path.basename(filePaths[i])}" />\n`
+  }
+  const isRemove = await reName(uploadUrl, filePaths);
+  if (!isRemove) return
+  progress.report({
+    increment: 20,
+    message: "文件已拷贝到指定目录"
+  });
   const git = simplegit(uploadUrl);
   await git.pull('origin', 'master');
-  await git.add('./*');
+  progress.report({
+    increment: 40,
+    message: "git已更新"
+  });
+  await git.add('./');
+  progress.report({
+    increment: 60,
+    message: "文件已添加"
+  });
   await git.commit('image update commit!');
+  progress.report({
+    increment: 80,
+    message: "文件已提交"
+  });
   await git.push('origin', 'master');
-  vscode.env.clipboard.writeText(`<cdn-image extClass="weapp-image" src="${targetSrc}/${path.basename(filePath)}" />`);
+  progress.report({
+    increment: 100,
+    message: "文件已上传"
+  });
+  vscode.env.clipboard.writeText(str);
   vscode.window.showInformationMessage('请粘贴代码');
 }
 
-const uploadImage = async (uploadUrl, filePath, targetSrc) => {
+const uploadImage = async (uploadUrl, filePaths, targetSrc) => {
   try {
-    let isRe = await reName(uploadUrl, filePath)
-    if (!isRe) return
     vscode.window.withProgress({
-      title: '正在上传...',
       location: vscode.ProgressLocation.Notification
-    }, () => new Promise((resolve) => gitHandle(uploadUrl, filePath, targetSrc).then(resolve())));
+    }, (progress) => gitHandle(uploadUrl, filePaths, targetSrc, progress))
   } catch (error) {
-    console.log(error)
+    vscode.window.showErrorMessage(error);
   }
 }
 //D:\\work_code\\weapp-image\\dist\\weapp-workbench\\images
 async function activate(context) {
-  const uploadHereConfig = vscode.workspace.getConfiguration('upload here');
+  const uploadHereConfig = vscode.workspace.getConfiguration('upload img');
   const {
     uploadUrl,
     targetSrc
@@ -49,16 +82,17 @@ async function activate(context) {
     vscode.window.showInformationMessage('请先配置图片上传接口地址');
     return;
   }
-  let disposable = vscode.commands.registerCommand('upload-here.UploadHere', async () => {
+  let disposable = vscode.commands.registerCommand('kf-upload-img.UploadHere', async () => {
     let fileUri = await vscode.window.showOpenDialog({
       canSelectFolders: false,
-      canSelectMany: false,
+      canSelectMany: true,
       filters: {
         'Images': ['png', 'jpg', 'ico', 'jpeg', 'svg', 'gif']
       }
     })
     if (fileUri && fileUri[0]) {
-      await uploadImage(uploadUrl, fileUri[0].fsPath, targetSrc);
+      fileUri = fileUri.map(i => i.fsPath)
+      await uploadImage(uploadUrl, fileUri, targetSrc);
     }
   });
   context.subscriptions.push(disposable);
