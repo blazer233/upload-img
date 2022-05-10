@@ -44,7 +44,7 @@
         "upload img.uploadUrl": {
           "type": "string",
           "default": "",
-          "description": "指定上传图片git本地地址"
+          "description": "指定上传图片git仓库本地路径"
         },
         "upload img.targetSrc": {
           "type": "string",

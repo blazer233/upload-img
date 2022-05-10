@@ -64,7 +64,7 @@ const gitHandle = async (uploadUrl, filePaths, folder, progress) => {
 }
 
 //D:\\work_code\\weapp-image\\dist\\weapp-workbench\\images
-async function activate(context) {
+exports.activate = (context) => {
   const uploadHereConfig = vscode.workspace.getConfiguration('upload img');
   const {
     uploadUrl,
@@ -98,8 +98,4 @@ async function activate(context) {
     }
   });
   context.subscriptions.push(disposable);
-}
-
-module.exports = {
-  activate
 }
