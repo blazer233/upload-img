@@ -5,13 +5,18 @@ const vscode = require('vscode');
 const fs = require('fs')
 const path = require('path')
 const simplegit = require('simple-git');
-const exists = async filePath => await fs.promises.access(filePath).then(() => true).catch(() => false)
-
-
-const reName = async (target, folder, sources) => {
+const exists = async filePath => {
+  try {
+    return await fs.promises.access(filePath).then(() => true).catch(() => false)
+  } catch (error) {
+    vscode.window.showErrorMessage('error:' + error);
+  }
+}
+const copyHandle = async (target, folder, sources) => {
   try {
     return await Promise.all(sources.map(async i => {
       const folderPath = path.join(target, folder, path.basename(i))
+      vscode.window.showInformationMessage('folderPath:' + folderPath);
       let res = await exists(folderPath)
       if (!res) {
         let readStream = fs.createReadStream(i)
@@ -19,7 +24,7 @@ const reName = async (target, folder, sources) => {
         readStream.pipe(writeStream);
       } else {
         vscode.window.showErrorMessage('检查文件名是否重复！');
-        return Promise.reject('检查文件名是否重复！')
+        return Promise.reject()
       }
     }))
   } catch (error) {
@@ -31,14 +36,15 @@ const gitHandle = async (uploadUrl, filePaths, folder, progress) => {
   for (let i = 0; i < filePaths.length; i++) {
     str += `<cdn-image extClass="weapp-image" src="${folder}/${path.basename(filePaths[i])}" />\n`
   }
-  const isRemove = await reName(uploadUrl, folder, filePaths);
-  console.log(isRemove, uploadUrl)
+  const isRemove = await copyHandle(uploadUrl, folder, filePaths);
+  vscode.window.showInformationMessage('isRemove:' + isRemove);
+  console.log(isRemove)
   if (!isRemove) return
+  const git = simplegit(uploadUrl);
   progress.report({
     increment: 20,
     message: "文件已拷贝到指定目录"
   });
-  const git = simplegit(uploadUrl);
   await git.pull('origin', 'master');
   progress.report({
     increment: 40,
@@ -62,7 +68,7 @@ const gitHandle = async (uploadUrl, filePaths, folder, progress) => {
   vscode.env.clipboard.writeText(str);
   vscode.window.showInformationMessage('请粘贴代码');
 }
-
+//.split(path.sep).join('/')
 //D:\\work_code\\weapp-image\\dist\\weapp-workbench\\images
 exports.activate = (context) => {
   const uploadHereConfig = vscode.workspace.getConfiguration('upload img');
