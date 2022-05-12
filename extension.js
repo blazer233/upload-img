@@ -4,11 +4,10 @@
 const vscode = require('vscode');
 const fs = require('fs')
 const path = require('path')
-const simplegit = require('simple-git');
+const Git = require('./minigit')
 const exists = async filePath => await fs.promises.access(filePath).then(() => true).catch(() => false)
 const copyFolder = async (read, path) => new Promise((resolve, reject) => fs.createReadStream(read).pipe(fs.createWriteStream(path)).on('finish', resolve).on('error', reject))
-
-
+console.log(Git)
 const copyHandle = async sources => {
   try {
     let isRepeat = await Promise.all(sources.map(async i => {
@@ -34,27 +33,27 @@ const gitHandle = async (uploadUrl, filePaths, folder, progress) => {
     }
     const isRemove = await copyHandle(filePaths);
     if (!isRemove) return
-    const git = simplegit(uploadUrl);
+    const miniGit = new Git(uploadUrl)
     progress.report({
       increment: 20,
       message: "文件已拷贝到指定目录"
     });
-    await git.pull('origin', 'master');
+    miniGit.command('pull')
     progress.report({
       increment: 40,
       message: "git已更新"
     });
-    await git.add('./');
+    miniGit.command('add .')
     progress.report({
       increment: 60,
       message: "文件已添加"
     });
-    await git.commit('image update commit!');
+    miniGit.command('commit -m `update Image`')
     progress.report({
       increment: 80,
       message: "文件已提交"
     });
-    await git.push('origin', 'master');
+    miniGit.command('push')
     progress.report({
       increment: 100,
       message: "文件已上传"
