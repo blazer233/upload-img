@@ -23,18 +23,6 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@kwsites/file-exists@^1.1.1":
-  version "1.1.1"
-  resolved "https://mirrors.tencent.com/npm/@kwsites%2ffile-exists/-/file-exists-1.1.1.tgz#ad1efcac13e1987d8dbaf235ef3be5b0d96faa99"
-  integrity sha512-m9/5YGR18lIwxSFDwfE3oA7bWuq9kdau6ugN4H2rJeyhFQZcG9AgSHkQtSD15a8WvTgfz9aikZMrKPHvbpqFiw==
-  dependencies:
-    debug "^4.1.1"
-
-"@kwsites/promise-deferred@^1.1.1":
-  version "1.1.1"
-  resolved "https://mirrors.tencent.com/npm/@kwsites%2fpromise-deferred/-/promise-deferred-1.1.1.tgz#8ace5259254426ccef57f3175bc64ed7095ed919"
-  integrity sha512-GaHYm+c0O9MjZRu0ongGBRbinu8gVAMd2UZjji6jVmqKtZluZnptXGWhz1E8j8D2HJ3f/yMxKAUC0b+57wncIw==
-
 "@tootallnate/once@1":
   version "1.1.2"
   resolved "https://mirrors.tencent.com/npm/@tootallnate%2fonce/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
@@ -477,7 +465,7 @@ debug@3.2.6:
   dependencies:
     ms "^2.1.1"
 
-debug@4, debug@^4.0.1, debug@^4.1.1, debug@^4.3.3:
+debug@4, debug@^4.0.1:
   version "4.3.4"
   resolved "https://mirrors.tencent.com/npm/debug/-/debug-4.3.4.tgz#1319f6579357f2338d3337d2cdd4914bb5dcc865"
   integrity sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==
@@ -1938,15 +1926,6 @@ simple-get@^4.0.0:
     decompress-response "^6.0.0"
     once "^1.3.1"
     simple-concat "^1.0.0"
-
-simple-git@^3.7.1:
-  version "3.7.1"
-  resolved "https://mirrors.tencent.com/npm/simple-git/-/simple-git-3.7.1.tgz#cb85c59da4da3d69792d206dd28cfbd803941fac"
-  integrity sha512-+Osjtsumbtew2y9to0pOYjNzSIr4NkKGBg7Po5SUtjQhaJf2QBmiTX/9E9cv9rmc7oUiSGFIB9e7ys5ibnT9+A==
-  dependencies:
-    "@kwsites/file-exists" "^1.1.1"
-    "@kwsites/promise-deferred" "^1.1.1"
-    debug "^4.3.3"
 
 slice-ansi@^2.1.0:
   version "2.1.0"
